@@ -1,0 +1,6 @@
+@Optovka_.net_8._0_HostAddress = http://localhost:5110
+
+GET {{Optovka_.net_8._0_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

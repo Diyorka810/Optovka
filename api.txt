@@ -1,0 +1,57 @@
+Регистрация
+Put /user
+body
+{
+   user
+   {
+   "name":string,
+   "password":string,
+   "email":string,
+   "phone":string
+   }	
+}
+Response 201
+
+Логин
+POST /user/auth
+queryParam: userId:number, userPassword:hash
+Response 200
+body
+{
+    "token":string
+}
+
+Просмотр личной информации в личном кабинете
+Get /user
+queryParam: userId:number, token:string
+Response 200
+body
+{
+    user
+    {
+    "name":string,
+    "password":string,
+    "email":string,
+    "phone":string,
+    "photo":jpg,
+    "status":string,
+    }
+}
+
+
+Изменение личной информации
+Post /user
+queryParam: userId:number, token:string
+body
+{
+    user
+    {
+    "name":string,
+    "password":string,
+    "email":string,
+    "phone":string,
+    "photo":jpg,
+    }
+}
+Response 201
+
