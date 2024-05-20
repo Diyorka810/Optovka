@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Optovka.Model;
 
 namespace Optovka
-{//модификкация поста получить список получить инфу о посте
+{ 
     [Route("api/userPost")]
     [ApiController]
     public class UserPostsController(IUserPostsService userPostsService) : Controller
@@ -41,11 +41,10 @@ namespace Optovka
             return StatusCode(StatusCodes.Status201Created);
         }
 
-        [HttpPatch("takePart")]
+        [HttpPatch("takePart{postId}")]
         [Authorize(Policy = "User")]
         public async Task<IActionResult> TakePart([FromQuery] int desiredQuantity, [FromRoute] int postId)
         {
-            //добавить таблицу - сохранить сколько юзер взял в определенном посте
             var userId = this.HttpContext.User.FindFirst("userId")?.Value;
             if (userId == null)
                 return StatusCode(StatusCodes.Status401Unauthorized, new { Status = "Error", Message = "You are not authorized" });
@@ -53,9 +52,14 @@ namespace Optovka
             var userPost = await userPostsService.TryGetByIdAsync(postId);
 
             if (userPost == null)
-                return StatusCode(StatusCodes.Status401Unauthorized, new { Status = "Error", Message = "You can change only your posts" });
+                return StatusCode(StatusCodes.Status401Unauthorized, new { Status = "Error", Message = "There is no post with this Id" });
 
-            await userPostsService.TakePartAsync(desiredQuantity, userPost);
+            if (!await userPostsService.HasFreeQuantity(userPost, desiredQuantity))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, new { Status = "Error", Message = "You are trying to order more than the available quantity" });
+            }
+
+            await userPostsService.TakePartAsync(desiredQuantity, userPost, userId);
             return StatusCode(StatusCodes.Status201Created);
         }
 

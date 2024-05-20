@@ -30,10 +30,21 @@ namespace Optovka.Model
             return await context.UserPosts.FirstOrDefaultAsync(post => post.Id == userPostId);
         }
 
-        public async Task TakePartAsync(int desiredQuantity, UserPost userPost)
+        public async Task<bool> HasFreeQuantity(UserPost userPost, int desiredQuantity)
+        {
+            if (userPost.TakenQuantity + desiredQuantity > userPost.RequiredQuantity)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task TakePartAsync(int desiredQuantity, UserPost userPost, string userId)
         {
             userPost.TakenQuantity += desiredQuantity;
-            var posts = context.UserPosts.Update(userPost);
+            context.UserPosts.Update(userPost);
+            var applicationUserUserPost = new ApplicationUserUserPost() { ParticipatedUserPostId = userPost.Id, ParticipatingUserId = userId, TakenQuantity = desiredQuantity };
+            context.ApplicationUserUserPosts.Add(applicationUserUserPost);
             await context.SaveChangesAsync();
         }
 

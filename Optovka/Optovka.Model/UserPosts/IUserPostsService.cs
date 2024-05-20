@@ -14,7 +14,8 @@ namespace Optovka.Model
         Task<IEnumerable<UserPost>> GetAsync(string sectionFilter, int skip, int limit, SortingOrderType sortingOrderType);
         Task<UserPost?> TryGetByTitleAsync(string title);
         Task<UserPost?> TryGetByIdAsync(int userPostId);
-        Task TakePartAsync(int desiredQuantity, UserPost userPost);
         Task TryUpdateAsync(UserPostDto dto, UserPost userPost);
+        Task TakePartAsync(int desiredQuantity, UserPost userPost, string userId);
+        Task<bool> HasFreeQuantity(UserPost userPost, int desiredQuantity);
     }
 }
