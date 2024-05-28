@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: optovka
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: optovka
+  template:
+    metadata:
+      labels:
+        app: optovka
+    spec:
+      containers:
+      - image: optovka
+        imagePullPolicy: Never
+        name: optovka
+        resources: 
+          limits:
+            cpu: 1
+            memory: "1024Mi"
+          requests: 
+            cpu: "500m"
+            memory: "512Mi"
+        ports:
+        - containerPort: 5050
