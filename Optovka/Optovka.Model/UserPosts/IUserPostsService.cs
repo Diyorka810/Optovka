@@ -11,7 +11,6 @@ namespace Optovka.Model
     {
         Task AddAsync(UserPostDto dto, string userId);
         Task<List<UserPost>> GetAllAsync();
-        Task<IEnumerable<UserPost>> GetAsync(string sectionFilter, int skip, int limit, SortingOrderType sortingOrderType);
         Task<UserPost?> TryGetByTitleAsync(string title);
         Task<UserPost?> TryGetByIdAsync(int userPostId);
         Task TryUpdateAsync(UserPostDto dto, UserPost userPost);

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,20 +25,24 @@ namespace Optovka.Model
 
         public (bool, StringBuilder) IsValid()
         {
-            var sb = new StringBuilder("Erors: \n");
+            var sb = new StringBuilder("Errors: \n");
             var isValid = true;
             Validate(() => this.Email == null, "The email can not be null");
 
             if (this.Email != null)
             {
-                var symbols = "!@#$%^&*()-=_+,?/|\\`:;\'\"{}[]";
+                var symbols = "!#$%^&*()-=_+,?/|\\`:;\'\"{}[]";
                 Validate(() => StringExtensions.ContainsAny(this.Email, symbols), "The email can only contain letters, numbers and . ");
 
                 var emailArr = this.Email.Split('@');
                 Validate(() => emailArr.Length != 2, "Email should contains one @");
 
-                var emailSecPartArr = emailArr[1].Split('.');
-                Validate(() => emailSecPartArr.Length != 2, "Email should contains 1 . after @");
+                if (emailArr.Length == 2)
+                {
+                    var emailSecPartArr = emailArr[1].Split('.');
+                    Validate(() => emailSecPartArr.Length != 2, "Email should contains 1 . after @");
+                }
+                
             }
             
             Validate(() => this.CardNumber.ToString().Length == 16, "Card number is incorrect");

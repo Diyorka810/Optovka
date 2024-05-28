@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Optovka.Model
 {
-    public class UserPostsService(ApplicationDbContext context, InMemoryCache inMemoryCache) : IUserPostsService
+    public class UserPostsService(ApplicationDbContext context) : IUserPostsService
     {
         public async Task AddAsync(UserPostDto dto, string userId)
         {
@@ -58,37 +58,6 @@ namespace Optovka.Model
         {
             var userPost = await context.UserPosts.FindAsync(title);
             return userPost;
-        }
-
-        public async Task<IEnumerable<UserPost>> GetAsync(string sectionFilter, int skip, int limit, SortingOrderType sortingOrderType)
-        {
-            var cacheKey = $"Feed_{sectionFilter}_{skip}_{limit}_{sortingOrderType}";
-
-            if (inMemoryCache.Contains(cacheKey))
-            {
-                return inMemoryCache.Get<IEnumerable<UserPost>>(cacheKey);
-            }
-
-            Func<UserPost, bool> filter = _ => true;
-            // move to FeedService
-            if (sectionFilter != "null")
-                filter = post => post.Section == sectionFilter;
-
-            var userPosts = (await context
-                .UserPosts
-                .ToListAsync())
-                .Where(up => filter(up))
-                .Skip(skip)
-                .Take(limit);
-
-            var orderedPosts = sortingOrderType switch
-            {
-                SortingOrderType.Asc => userPosts.OrderBy(up => up.Id),
-                SortingOrderType.Desc => userPosts.OrderByDescending(up => up.Id),
-                _ => throw new InvalidOperationException($"{sortingOrderType} this sorting order type is nt supported")
-            };
-            inMemoryCache.Set(cacheKey, orderedPosts);
-            return orderedPosts;
         }
     }
 }

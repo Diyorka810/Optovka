@@ -8,7 +8,7 @@ namespace Optovka;
 
 [Route("api/feed")]
 [ApiController]
-public class FeedController(IUserPostsService userPostsService) : Controller
+public class FeedController(IFeedService feedSerice) : Controller
 {
     [HttpGet]
     [Authorize(Policy = "User")]
@@ -27,7 +27,7 @@ public class FeedController(IUserPostsService userPostsService) : Controller
             return StatusCode(StatusCodes.Status400BadRequest,
                 new { Status = "Error", Message = "Skip value must be positive." });
 
-        var userPosts =  await userPostsService.GetAsync(sectionFilter = sectionFilter, skip = skip, limit = limit, sortingOrderType = sortingOrderType);
+        var userPosts =  await feedSerice.GetAsync(sectionFilter = sectionFilter, skip = skip, limit = limit, sortingOrderType = sortingOrderType);
         return Ok(userPosts);
     }
 }

@@ -4,8 +4,8 @@ namespace Optovka.Model {
     [DataContract]
     public class RegisterModel
     {
-        [DataMember(Name = "username")]
-        public required string Username { get; set; }
+        [DataMember(Name = "userName")]
+        public required string UserName { get; set; }
 
         [DataMember(Name = "password")]
         public required string Password { get; set; }

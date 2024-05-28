@@ -1,24 +1,22 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Optovka.Model;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 [Route("api/users")]
 [ApiController]
-public class AuthController : ControllerBase
+public class UserController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
+    public UserController(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _configuration = configuration;
@@ -47,7 +45,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
     {
-        var userExists = await _userManager.FindByNameAsync(registerModel.Username);
+        var userExists = await _userManager.FindByNameAsync(registerModel.UserName);
         if (userExists != null)
             return StatusCode(StatusCodes.Status400BadRequest, new { Status = "Error", Message = "User already exists!" });
 
@@ -55,7 +53,7 @@ public class AuthController : ControllerBase
         {
             Email = registerModel.Email,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = registerModel.Username,
+            UserName = registerModel.UserName,
             PhoneNumber = registerModel.PhoneNumber,
             BirthDate = registerModel.BirthDate
         };
@@ -72,7 +70,7 @@ public class AuthController : ControllerBase
             return StatusCode(StatusCodes.Status400BadRequest, new { Status = "Error", Message = result.Errors });
 
         await _userManager.AddToRoleAsync(user, "User");
-        return Ok(new { Status = "Success", Message = "User created successfully!" });
+        return StatusCode(StatusCodes.Status201Created, new { Status = "Success", Message = "User created successfully!" });
     }
 
     [HttpPost("login")]
