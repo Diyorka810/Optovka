@@ -5,8 +5,8 @@ namespace Optovka.Model
     [DataContract]
     public class UserInfoDto
     {
-        [DataMember(Name = "username")]
-        public required string Username { get; set; }
+        [DataMember(Name = "userName")]
+        public required string UserName { get; set; }
 
         [DataMember(Name = "email")]
         public required string Email { get; set; }

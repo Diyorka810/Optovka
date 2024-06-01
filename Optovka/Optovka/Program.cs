@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using Prometheus;
 using Optovka;
+using static UserController;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IUserPostsService, UserPostsService>();
+builder.Services.AddScoped<ISecurityKey, MySecurityKey>();
 
 builder.Services.AddSingleton<InMemoryCache>();
 
