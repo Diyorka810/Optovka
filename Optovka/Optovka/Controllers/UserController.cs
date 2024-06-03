@@ -9,8 +9,8 @@ using System.Text;
 
 public record ApiResponse
 {
-    public string Status;
-    public string Message;
+    public required string Status;
+    public required string Message;
 }
 
 [Route("api/users")]
@@ -20,18 +20,15 @@ public class UserController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly ISecurityKey _securityKey;
     private const string ClaimName = "userId";
 
     public UserController(UserManager<ApplicationUser> userManager,
         IConfiguration configuration,
-        RoleManager<IdentityRole> roleManager,
-        ISecurityKey securityKey)
+        RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _configuration = configuration;
         _roleManager = roleManager;
-        _securityKey = securityKey;
     }
 
     [HttpGet("getById")]
@@ -108,11 +105,11 @@ public class UserController : ControllerBase
         foreach (var roleName in rolesList)
         {
             var role = await _roleManager.FindByNameAsync(roleName);
-            var existingClaims = await _roleManager.GetClaimsAsync(role);
+            var existingClaims = await _roleManager.GetClaimsAsync(role!);
             authClaims.AddRange(existingClaims);
         }
 
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
 
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:ValidIssuer"],
@@ -127,16 +124,5 @@ public class UserController : ControllerBase
             token = new JwtSecurityTokenHandler().WriteToken(token),
             expiration = token.ValidTo
         });
-    }
-    public class MySecurityKey : ISecurityKey
-    {
-        public SymmetricSecurityKey CreateAuthSigningKey(IConfiguration configuration)
-        {
-            return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
-        }
-    }
-    public interface ISecurityKey
-    {
-        SymmetricSecurityKey CreateAuthSigningKey(IConfiguration configuration);
     }
 }

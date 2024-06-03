@@ -28,13 +28,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IUserPostsService, UserPostsService>();
-builder.Services.AddScoped<ISecurityKey, MySecurityKey>();
 
 builder.Services.AddSingleton<InMemoryCache>();
 
 
 // ����������� JWT Authentication
-var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]);
+var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]!);
 builder.Services
     .AddAuthentication(x =>
     {
@@ -116,7 +115,7 @@ async Task CreateRoles(IServiceProvider serviceProvider)
     foreach (var role in roles)
     {
         var roleExist = await roleManager.RoleExistsAsync(role.Key);
-        IdentityRole identityRole;
+        IdentityRole? identityRole;
         if (!roleExist)
         {
             // ������� ���� � ��������� � ���� ������
@@ -130,10 +129,10 @@ async Task CreateRoles(IServiceProvider serviceProvider)
         foreach (var claim in role.Value)
         {
             var claimToAdd = new Claim("permission", claim);
-            var existingClaim = await roleManager.GetClaimsAsync(identityRole);
+            var existingClaim = await roleManager.GetClaimsAsync(identityRole!);
             if (!existingClaim.Any(c => c.Type == claimToAdd.Type && c.Value == claimToAdd.Value))
             {
-                await roleManager.AddClaimAsync(identityRole, claimToAdd);
+                await roleManager.AddClaimAsync(identityRole!, claimToAdd);
             }
         }
     }

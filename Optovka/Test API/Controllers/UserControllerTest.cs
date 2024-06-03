@@ -23,7 +23,6 @@ namespace Test_API
         public required Mock<UserManager<ApplicationUser>> userManager;
         public required Mock<IConfiguration> configuration;
         public required Mock<RoleManager<IdentityRole>> roleManager;
-        public required Mock<ISecurityKey> securityKey;
         public required UserController userController;
         public required ApplicationUser user;
         public required RegisterModel registerModel;
@@ -53,8 +52,7 @@ namespace Test_API
             roleManager = MockServices.CreateRoleManagerMock();
 
             configuration = new Mock<IConfiguration>();
-            securityKey = new Mock<ISecurityKey>();
-            userController = new UserController(userManager.Object, configuration.Object, roleManager.Object, securityKey.Object);
+            userController = new UserController(userManager.Object, configuration.Object, roleManager.Object);
         }
 
         [TestMethod]
@@ -62,8 +60,8 @@ namespace Test_API
         {
             //Arrange
             var createdUser = userManager.Setup(x => x.FindByIdAsync(user.Id))
-                                  .Returns(Task.FromResult(user));
-            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object, securityKey.Object);
+                                  .Returns(Task.FromResult(user)!);
+            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object);
             //Act
             var expectedResult = await controller.Get(user.Id);
 
@@ -86,10 +84,10 @@ namespace Test_API
         public async Task Get_UserNotExist_StatusCode404()
         {
             //Arrange
-            ApplicationUser nullRes = null;
+            ApplicationUser? nullRes = null;
             userManager.Setup(x => x.FindByIdAsync(user.Id))
                                   .Returns(Task.FromResult(nullRes));
-            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object, securityKey.Object);
+            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object);
             var status = "Error";
             var message = "User not found";
 
@@ -136,9 +134,9 @@ namespace Test_API
         {
             //Arrange
             var userManager = MockServices.CreateUMSetupResultSuccess();
-            userManager.Setup(x => x.FindByNameAsync(user.UserName))
-                                .Returns(Task.FromResult(user));
-            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object, securityKey.Object);
+            userManager.Setup(x => x.FindByNameAsync(user.UserName!))
+                                .Returns(Task.FromResult(user)!);
+            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object);
             var status = "Error";
             var message = "User already exists!";
 
@@ -192,7 +190,7 @@ namespace Test_API
         {
             //Arrange
             var userManager= MockServices.CreateUMSetupResultFailed();
-            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object, securityKey.Object);
+            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object);
 
             var status = "Error";
             var message = "Username already exists";
@@ -217,12 +215,12 @@ namespace Test_API
         {
             //Arrange
             var userManager= MockServices.CreateUserManagerMock();
-            ApplicationUser nullUser = null;
+            ApplicationUser? nullUser = null;
             userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(nullUser);
-            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object, securityKey.Object);
+            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object);
 
             //Act
-            var expectedResult = await controller.Login(user.UserName, registerModel.Password);
+            var expectedResult = await controller.Login(user.UserName!, registerModel.Password);
 
             //Assert
             Assert.IsNotNull(expectedResult);
@@ -239,10 +237,10 @@ namespace Test_API
             var userManager = MockServices.CreateUserManagerMock();
             userManager.Setup(x => x.FindByNameAsync(It.IsAny<string>())).ReturnsAsync(user);
             userManager.Setup(x => x.CheckPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>())).ReturnsAsync(false);
-            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object, securityKey.Object);
+            var controller = new UserController(userManager.Object, configuration.Object, roleManager.Object);
 
             //Act
-            var expectedResult = await controller.Login(user.UserName, registerModel.Password);
+            var expectedResult = await controller.Login(user.UserName!, registerModel.Password);
 
             //Assert
             Assert.IsNotNull(expectedResult);
@@ -267,18 +265,16 @@ namespace Test_API
                 new Claim("User", user.Id)
             };
             roleManager.Setup(x => x.GetClaimsAsync(It.IsAny<IdentityRole>())).ReturnsAsync(authClaims);
-            var securityKey = new Mock<ISecurityKey>();
             var inMemorySettings = new Dictionary<string, string> 
             {
                 {"JWT:Secret", "YourSecretKeyHere1233333333333333333333322222222111111111111111111111111111111111111111111123123123"},
             };
 
             IConfiguration configuration = new ConfigurationBuilder()
-                        .AddInMemoryCollection(inMemorySettings)
+                        .AddInMemoryCollection(inMemorySettings!)
                         .Build();
-            securityKey.Setup(x => x.CreateAuthSigningKey(configuration)).Returns(It.IsAny<SymmetricSecurityKey>);
             
-            var controller = new UserController(userManager.Object, configuration, roleManager.Object, securityKey.Object);
+            var controller = new UserController(userManager.Object, configuration, roleManager.Object);
 
             //Act
             var expectedResult = await controller.Login(user.UserName!, registerModel.Password);
