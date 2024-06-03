@@ -12,9 +12,9 @@ namespace Optovka
         [Authorize(Policy = "User")]
         public async Task<IActionResult> Create([FromBody] UserPostDto dto)
         {
-            var userId = this.HttpContext.User.FindFirst("userId")?.Value;
+            var userId= this.HttpContext.User.FindFirst("userId")?.Value;
             if (userId == null)
-                return StatusCode(StatusCodes.Status401Unauthorized, new { Status = "Error", Message = "You are not authorized" });
+                return Unauthorized();
 
             await userPostsService.AddAsync(dto, userId);
             return StatusCode(StatusCodes.Status201Created);

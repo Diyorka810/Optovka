@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optovka", "Optovka\Optovka.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optovka.Model", "Optovka.Model\Optovka.Model.csproj", "{868D9532-09BC-420F-9C6C-9699BC3E6C65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test API", "Test API\Test API.csproj", "{71C603FB-DDF8-4122-A8BB-3751A1D3ADC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OptovkaTests", "Test API\OptovkaTests.csproj", "{71C603FB-DDF8-4122-A8BB-3751A1D3ADC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

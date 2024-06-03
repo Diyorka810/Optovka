@@ -1,4 +1,4 @@
-namespace Test_API
+namespace OptovkaTests
 {
     [TestClass]
     public class UnitTest1
