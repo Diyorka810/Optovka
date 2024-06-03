@@ -26,16 +26,17 @@ namespace Optovka
         {
             var userId = HttpContext.User.FindFirst("userId")?.Value;
             if (userId == null)
-                return StatusCode(
-                    StatusCodes.Status401Unauthorized,
-                    new { Status = "Error", Message = "You are not authorized" });
+                return Unauthorized();
 
             var userPost = await userPostsService.TryGetByIdAsync(userPostId);
 
-            if (userPost == null || userPost.AuthorUserId != userId)
+            if (userPost == null)
+                return StatusCode(StatusCodes.Status404NotFound);
+
+            if (userPost.AuthorUserId != userId)
                 return StatusCode(
                     StatusCodes.Status401Unauthorized,
-                    new { Status = "Error", Message = "You can change only your posts" });
+                    new ApiResponse { Status = "Error", Message = "You can change only your posts" });
 
             await userPostsService.TryUpdateAsync(dto, userPost);
             return StatusCode(StatusCodes.Status201Created);
@@ -47,20 +48,20 @@ namespace Optovka
         {
             var userId = this.HttpContext.User.FindFirst("userId")?.Value;
             if (userId == null)
-                return StatusCode(StatusCodes.Status401Unauthorized, new { Status = "Error", Message = "You are not authorized" });
+                return Unauthorized();
 
             var userPost = await userPostsService.TryGetByIdAsync(postId);
-
             if (userPost == null)
-                return StatusCode(StatusCodes.Status401Unauthorized, new { Status = "Error", Message = "There is no post with this Id" });
+                return StatusCode(StatusCodes.Status404NotFound);
 
             if (!await userPostsService.HasFreeQuantity(userPost, desiredQuantity))
             {
-                return StatusCode(StatusCodes.Status401Unauthorized, new { Status = "Error", Message = "You are trying to order more than the available quantity" });
+                return StatusCode(StatusCodes.Status400BadRequest, 
+                    new ApiResponse { Status = "Error", Message = "You are trying to order more than the available quantity" });
             }
 
             await userPostsService.TakePartAsync(desiredQuantity, userPost, userId);
-            return StatusCode(StatusCodes.Status201Created);
+            return StatusCode(StatusCodes.Status205ResetContent);
         }
 
         [HttpGet("getByTitle")]
@@ -70,9 +71,7 @@ namespace Optovka
             var userPost = await userPostsService.TryGetByTitleAsync(postTitle);
 
             return userPost == null
-                ? StatusCode(
-                    StatusCodes.Status400BadRequest,
-                    new { Status = "Error", Message = "There is no post with this title" })
+                ? StatusCode(StatusCodes.Status404NotFound)
                 : Ok(userPost);
         }
 

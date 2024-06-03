@@ -1,14 +1,12 @@
-using System.Linq.Expressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Optovka.Model;
 
 namespace Optovka;
 
 [Route("api/feed")]
 [ApiController]
-public class FeedController(IFeedService feedSerice) : Controller
+public class FeedController(IFeedService feedService) : Controller
 {
     [HttpGet]
     [Authorize(Policy = "User")]
@@ -27,7 +25,7 @@ public class FeedController(IFeedService feedSerice) : Controller
             return StatusCode(StatusCodes.Status400BadRequest,
                 new { Status = "Error", Message = "Skip value must be positive." });
 
-        var userPosts =  await feedSerice.GetAsync(sectionFilter = sectionFilter, skip = skip, limit = limit, sortingOrderType = sortingOrderType);
+        var userPosts =  await feedService.GetAsync(sectionFilter = sectionFilter, skip = skip, limit = limit, sortingOrderType = sortingOrderType);
         return Ok(userPosts);
     }
 }
