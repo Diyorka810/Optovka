@@ -19,7 +19,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<UserPost>().HasKey(b => b.Id);
         modelBuilder.Entity<UserPost>().Property(b => b.Id).ValueGeneratedOnAdd();
-        //modelBuilder.Entity<UserPost>().HasIndex(x => x.Title).IsUnique();
         modelBuilder.Entity<UserPost>()
                 .HasOne(p => p.AuthorUser)
                 .WithMany(b => b.PersonalUserPosts)

@@ -9,12 +9,12 @@ namespace Optovka.Model
 {
     public interface IUserPostsService
     {
-        Task AddAsync(UserPostDto dto, string userId);
+        Task AddAsync(UserPostModel userPostModel, string authorId);
         Task<List<UserPost>> GetAllAsync();
         Task<UserPost?> TryGetByTitleAsync(string title);
         Task<UserPost?> TryGetByIdAsync(int userPostId);
-        Task TryUpdateAsync(UserPostDto dto, UserPost userPost);
+        Task TryUpdateAsync(UserPostModel dto, UserPost userPost);
         Task TakePartAsync(int desiredQuantity, UserPost userPost, string userId);
-        Task<bool> HasFreeQuantity(UserPost userPost, int desiredQuantity);
+        bool HasFreeQuantity(UserPost userPost, int desiredQuantity);
     }
 }

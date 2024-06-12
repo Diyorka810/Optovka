@@ -16,7 +16,7 @@ namespace Optovka
             if (userId == null)
                 return Unauthorized();
 
-            await userPostsService.AddAsync(dto, userId);
+            await userPostsService.AddAsync(dto.ToUserPostModel(), userId);
             return StatusCode(StatusCodes.Status201Created);
         }
 
@@ -38,7 +38,8 @@ namespace Optovka
                     StatusCodes.Status401Unauthorized,
                     new ApiResponse { Status = "Error", Message = "You can change only your posts" });
 
-            await userPostsService.TryUpdateAsync(dto, userPost);
+
+            await userPostsService.TryUpdateAsync(dto.ToUserPostModel(), userPost);
             return StatusCode(StatusCodes.Status201Created);
         }
 
@@ -54,7 +55,7 @@ namespace Optovka
             if (userPost == null)
                 return StatusCode(StatusCodes.Status404NotFound);
 
-            if (!await userPostsService.HasFreeQuantity(userPost, desiredQuantity))
+            if (!userPostsService.HasFreeQuantity(userPost, desiredQuantity))
             {
                 return StatusCode(StatusCodes.Status400BadRequest, 
                     new ApiResponse { Status = "Error", Message = "You are trying to order more than the available quantity" });

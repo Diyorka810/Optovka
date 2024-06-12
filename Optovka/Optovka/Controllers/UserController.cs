@@ -63,7 +63,8 @@ public class UserController : ControllerBase
             SecurityStamp = Guid.NewGuid().ToString(),
             UserName = registerModel.UserName,
             PhoneNumber = registerModel.PhoneNumber,
-            BirthDate = registerModel.BirthDate
+            BirthDate = registerModel.BirthDate,
+            CardNumber = registerModel.CardNumber
         };
 
         var (isValid, errorsList) = user.IsValid();

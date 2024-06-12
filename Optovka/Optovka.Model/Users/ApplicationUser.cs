@@ -45,7 +45,7 @@ namespace Optovka.Model
                 
             }
             
-            Validate(() => this.CardNumber.ToString().Length == 16, "Card number is incorrect");
+            Validate(() => this.CardNumber.ToString().Length != 16, "Card number is incorrect");
             Validate(() => CountYears() < 16, $"You are too young. Come back in {16 - CountYears()} years ");
 
             return (isValid, sb);

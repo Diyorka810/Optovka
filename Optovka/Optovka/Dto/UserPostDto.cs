@@ -16,5 +16,10 @@ namespace Optovka.Model
         
         [DataMember(Name = "requiredQuantity")]
         public int RequiredQuantity { get; set; }
+
+        public UserPostModel ToUserPostModel()
+        {
+            return new UserPostModel(Title, Section, Description, RequiredQuantity);
+        }
     }
 }

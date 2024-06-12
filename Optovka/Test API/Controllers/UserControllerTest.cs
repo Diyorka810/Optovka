@@ -26,6 +26,7 @@ namespace OptovkaTests
                 PhoneNumber = "+998946899911",
                 BirthDate = new DateTime(2000, 1, 1),
                 Password = "A_123asd",
+                CardNumber = 1234567890123456
             };
             user = new ApplicationUser()
             {
@@ -34,7 +35,8 @@ namespace OptovkaTests
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = registerModel.UserName,
                 PhoneNumber = registerModel.PhoneNumber,
-                BirthDate = registerModel.BirthDate
+                BirthDate = registerModel.BirthDate,
+                CardNumber = registerModel.CardNumber,
             };
 
             userManager = MockServices.CreateUMSetupResultSuccess();
@@ -145,7 +147,7 @@ namespace OptovkaTests
         }
 
         [TestMethod]
-        public async Task Register_IncorrectEmailAndDate_ValidationErrors()
+        public async Task Register_IncorrectEmailDateAndCardNumber_ValidationErrors()
         {
             //Arrange
             var incorrectDto = new RegisterModel()
@@ -155,9 +157,10 @@ namespace OptovkaTests
                 PhoneNumber = "+998946899911",
                 BirthDate = new DateTime(2010, 1, 1),
                 Password = "123",
+                CardNumber = 1,
             };
             var status = "Error";
-            var message = "Errors: \nThe email can only contain letters, numbers and . \r\nEmail should contains one @\r\nYou are too young. Come back in 2 years \r\n";
+            var message = "Errors: \nThe email can only contain letters, numbers and . \r\nEmail should contains one @\r\nCard number is incorrect\r\nYou are too young. Come back in 2 years \r\n";
             //Act
             var expectedResult = await userController.Register(incorrectDto);
 

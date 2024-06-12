@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Moq;
-using Optovka.Model;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace OptovkaTests
 {
@@ -29,7 +26,7 @@ namespace OptovkaTests
                 Description = "description",
                 RequiredQuantity = 1
             };
-            userPost = new UserPost(userPostDto, "1");
+            userPost = new UserPost(userPostDto.ToUserPostModel(), "1");
             user = new ApplicationUser()
             {
                 Id = "1",
@@ -90,7 +87,7 @@ namespace OptovkaTests
         public void Edit_AuthorUserPostIdIsNotEqual_StatusCode401()
         {
             //Arrange 
-            var userPost = new UserPost(userPostDto, "asdf");
+            var userPost = new UserPost(userPostDto.ToUserPostModel(), "asdf");
             userPostsService.Setup(x => x.TryGetByIdAsync(It.IsAny<int>())).ReturnsAsync(userPost);
             var controller = new UserPostsController(userPostsService.Object);
             controller.ControllerContext.HttpContext = httpContext;
@@ -156,7 +153,7 @@ namespace OptovkaTests
         {
             //Arrange
             userPostsService.Setup(x => x.TryGetByIdAsync(It.IsAny<int>())).ReturnsAsync(userPost);
-            userPostsService.Setup(x => x.HasFreeQuantity(userPost, It.IsAny<int>())).ReturnsAsync(false);
+            userPostsService.Setup(x => x.HasFreeQuantity(userPost, It.IsAny<int>())).Returns(false);
             var controller = new UserPostsController(userPostsService.Object);
             controller.ControllerContext.HttpContext = httpContext;
             var status = "Error";
@@ -182,7 +179,7 @@ namespace OptovkaTests
         {
             //Arrange
             userPostsService.Setup(x => x.TryGetByIdAsync(It.IsAny<int>())).ReturnsAsync(userPost);
-            userPostsService.Setup(x => x.HasFreeQuantity(userPost, It.IsAny<int>())).ReturnsAsync(true);
+            userPostsService.Setup(x => x.HasFreeQuantity(userPost, It.IsAny<int>())).Returns(true);
             var controller = new UserPostsController(userPostsService.Object);
             controller.ControllerContext.HttpContext = httpContext;
 

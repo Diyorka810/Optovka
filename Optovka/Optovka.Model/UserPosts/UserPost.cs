@@ -8,7 +8,7 @@
         private string section;
         private string description;
         private int requiredQuantity;
-        private int takenQuantity;//taken quantity
+        private int takenQuantity;
         public ApplicationUser AuthorUser { get; set; }
         private DateTime createdAt;
         public List<ApplicationUser> ParticipatingUsers;
@@ -25,13 +25,13 @@
             takenQuantity = 0;
         }
 
-        public UserPost(UserPostDto dto, string authorUserId) 
+        public UserPost(UserPostModel userPostModel, string authorUserId) 
         {
             this.authorUserId = authorUserId;
-            title = dto.Title;
-            section = dto.Section;
-            description = dto.Description;
-            requiredQuantity = dto.RequiredQuantity;
+            title = userPostModel.Title;
+            section = userPostModel.Section;
+            description = userPostModel.Description;
+            requiredQuantity = userPostModel.RequiredQuantity;
             createdAt = DateTime.UtcNow;
             ParticipatingUsers = new List<ApplicationUser>();
             takenQuantity = 0;

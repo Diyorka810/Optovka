@@ -5,21 +5,21 @@ namespace Optovka.Model
 {
     public class UserPostsService(ApplicationDbContext context) : IUserPostsService
     {
-        public async Task AddAsync(UserPostDto dto, string userId)
+        public async Task AddAsync(UserPostModel userPostModel, string authorId)
         {
-            var userPost = new UserPost(dto, userId);
+            var userPost = new UserPost(userPostModel, authorId);
 
             var posts = context.UserPosts;
             posts.Add(userPost);
             await context.SaveChangesAsync();
         }
 
-        public async Task TryUpdateAsync(UserPostDto dto, UserPost userPost)
+        public async Task TryUpdateAsync(UserPostModel userPostModel, UserPost userPost)
         {
-            userPost.Title = dto.Title;
-            userPost.Section = dto.Section;
-            userPost.Description = dto.Description;
-            userPost.RequiredQuantity = dto.RequiredQuantity;
+            userPost.Title = userPostModel.Title;
+            userPost.Section = userPostModel.Section;
+            userPost.Description = userPostModel.Description;
+            userPost.RequiredQuantity = userPostModel.RequiredQuantity;
 
             context.UserPosts.Update(userPost);
             await context.SaveChangesAsync();
@@ -30,7 +30,7 @@ namespace Optovka.Model
             return await context.UserPosts.FirstOrDefaultAsync(post => post.Id == userPostId);
         }
 
-        public async Task<bool> HasFreeQuantity(UserPost userPost, int desiredQuantity)
+        public bool HasFreeQuantity(UserPost userPost, int desiredQuantity)
         {
             if (userPost.TakenQuantity + desiredQuantity > userPost.RequiredQuantity)
             {
@@ -43,7 +43,12 @@ namespace Optovka.Model
         {
             userPost.TakenQuantity += desiredQuantity;
             context.UserPosts.Update(userPost);
-            var applicationUserUserPost = new ApplicationUserUserPost() { ParticipatedUserPostId = userPost.Id, ParticipatingUserId = userId, TakenQuantity = desiredQuantity };
+
+            var applicationUserUserPost = new ApplicationUserUserPost() { 
+                ParticipatedUserPostId = userPost.Id, 
+                ParticipatingUserId = userId, 
+                TakenQuantity = desiredQuantity 
+            };
             context.ApplicationUserUserPosts.Add(applicationUserUserPost);
             await context.SaveChangesAsync();
         }
