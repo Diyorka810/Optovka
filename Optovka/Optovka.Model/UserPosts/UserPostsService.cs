@@ -27,6 +27,7 @@ namespace Optovka.Model
 
         public async Task<UserPost?> TryGetByIdAsync(int userPostId)
         {
+            var users = context.Users.ToList();
             return await context.UserPosts.FirstOrDefaultAsync(post => post.Id == userPostId);
         }
 
@@ -61,7 +62,7 @@ namespace Optovka.Model
 
         public async Task<UserPost?> TryGetByTitleAsync(string title)
         {
-            var userPost = await context.UserPosts.FindAsync(title);
+            var userPost = await context.UserPosts.FirstOrDefaultAsync(x => x.Title == title);
             return userPost;
         }
     }

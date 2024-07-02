@@ -2,7 +2,7 @@
 
 namespace Optovka.Model
 {
-    public class FeedService(ApplicationDbContext context, InMemoryCache inMemoryCache) : IFeedService
+    public class FeedService(ApplicationDbContext context, IInMemoryCache inMemoryCache) : IFeedService
     {
         public async Task<IEnumerable<UserPost>> GetAsync(string sectionFilter, int skip, int limit, SortingOrderType sortingOrderType)
         {

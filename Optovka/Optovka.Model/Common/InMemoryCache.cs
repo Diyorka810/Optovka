@@ -4,21 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
+using Microsoft.EntityFrameworkCore.InMemory.Storage.Internal;
 
 namespace Optovka.Model
 {
-    public class InMemoryCache
+    public class InMemoryCache : IInMemoryCache
     {
         private MemoryCache _cache;
         private CacheItemPolicy _policy;
+        private const int MinutesToLive = 5;
 
         public InMemoryCache()
         {
             _cache = MemoryCache.Default;
             _policy = new CacheItemPolicy
             {
-                // Set your expiration TimeSpan based on your needs
-                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5)
+                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(MinutesToLive)
             };
         }
 

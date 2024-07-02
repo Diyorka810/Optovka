@@ -20,10 +20,10 @@ public class FeedController(IFeedService feedService) : Controller
     {
         if (limit is > 50 or <= 0)
             return StatusCode(StatusCodes.Status400BadRequest,
-                new { Status = "Error", Message = "From 1 to 50 posts at one request is allowed." });
+                new ApiResponse { Status = "Error", Message = "From 1 to 50 posts at one request is allowed." });
         if (skip <= 0)
             return StatusCode(StatusCodes.Status400BadRequest,
-                new { Status = "Error", Message = "Skip value must be positive." });
+                new ApiResponse { Status = "Error", Message = "Skip value must be positive." });
 
         var userPosts =  await feedService.GetAsync(sectionFilter = sectionFilter, skip = skip, limit = limit, sortingOrderType = sortingOrderType);
         return Ok(userPosts);
