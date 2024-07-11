@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Optovka.Model
+namespace Optovka
 { 
     [DataContract]
-    public class LoginModel
+    public class LoginDto
     {
         [DataMember(Name = "username")]
         public required string Username { get; set; }

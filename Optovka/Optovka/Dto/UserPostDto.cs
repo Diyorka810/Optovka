@@ -1,6 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿using Optovka.Model;
+using System.Runtime.Serialization;
 
-namespace Optovka.Model
+namespace Optovka
 {
     [DataContract]
     public class UserPostDto

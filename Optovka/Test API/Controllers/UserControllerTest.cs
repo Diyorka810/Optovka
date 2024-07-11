@@ -14,12 +14,12 @@ namespace OptovkaTests
         public required Mock<RoleManager<IdentityRole>> roleManager;
         public required UserController userController;
         public required ApplicationUser user;
-        public required RegisterModel registerModel;
+        public required RegisterDto registerModel;
 
         [TestInitialize]
         public void Setup()
         {
-            registerModel = new RegisterModel()
+            registerModel = new RegisterDto()
             {
                 Email = "user@gmail.com",
                 UserName = "user",
@@ -150,7 +150,7 @@ namespace OptovkaTests
         public async Task Register_IncorrectEmailDateAndCardNumber_ValidationErrors()
         {
             //Arrange
-            var incorrectDto = new RegisterModel()
+            var incorrectDto = new RegisterDto()
             {
                 Email = "us#$%^&ergmailcom",
                 UserName = "user",

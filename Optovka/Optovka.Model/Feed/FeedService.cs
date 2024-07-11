@@ -30,6 +30,7 @@ namespace Optovka.Model
                 SortingOrderType.Desc => userPosts.OrderByDescending(up => up.Id),
                 _ => throw new InvalidOperationException($"{sortingOrderType} this sorting order type is nt supported")
             };
+
             inMemoryCache.Set(cacheKey, orderedPosts);
             return orderedPosts;
         }

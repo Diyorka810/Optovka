@@ -1,10 +1,4 @@
-﻿using Optovka.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace OptovkaTests.Models
 {
@@ -36,7 +30,6 @@ namespace OptovkaTests.Models
             user.Email = email;
             var isValid = false;
             errorMessage.AppendLine("The email can not be null");
-
 
             //Act
             var expectedResult = user.IsValid();

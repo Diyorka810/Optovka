@@ -1,18 +1,4 @@
-using Lw;
-using Lw.Data;
-using Lw.Data.Entity;
-using Lw.Reflection;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory.Storage.Internal;
-using Moq;
-using Optovka.Model;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity;
-using System.Linq.Expressions;
-using System.Reflection.Metadata;
 
 namespace OptovkaTests
 {
@@ -88,8 +74,6 @@ namespace OptovkaTests
             var newUserPosts = context.UserPosts.ToList();
             Assert.AreEqual(newUserPosts.Count(), 0);
         }
-
-
 
         [TestMethod]
         public void HasFreeQuantity_True()

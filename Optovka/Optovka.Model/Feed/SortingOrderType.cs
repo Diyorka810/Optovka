@@ -1,8 +1,8 @@
-namespace Optovka.Model;
-
-// move to model
-public enum SortingOrderType
+namespace Optovka.Model
 {
-    Desc,
-    Asc
+    public enum SortingOrderType
+    {
+        Desc,
+        Asc
+    }
 }

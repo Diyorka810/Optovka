@@ -1,8 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Optovka.Model {
+namespace Optovka {
     [DataContract]
-    public class RegisterModel
+    public class RegisterDto
     {
         [DataMember(Name = "userName")]
         public required string UserName { get; set; }
@@ -24,4 +24,3 @@ namespace Optovka.Model {
     }
 
 }
-

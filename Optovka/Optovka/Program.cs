@@ -1,28 +1,20 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Optovka.Model;
 using Microsoft.AspNetCore.Authorization;
-using System.Configuration;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using Prometheus;
-using Optovka;
-using static UserController;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var Configuration = builder.Configuration;
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-// ����������� Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
@@ -31,8 +23,6 @@ builder.Services.AddScoped<IUserPostsService, UserPostsService>();
 
 builder.Services.AddSingleton<InMemoryCache>();
 
-
-// ����������� JWT Authentication
 var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]!);
 builder.Services
     .AddAuthentication(x =>
@@ -64,43 +54,37 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(
-   c =>
-   {
-       c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-       c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
-       {
-           Description =
-         "JWT Authorization header using the Bearer scheme. \r\n\r\n " +
-         "Enter 'Bearer' [space] and then your token in the text input below." +
-         "\r\n\r\nExample: \"Bearer 12345abcdef\"",
-           Name = "Authorization",
-           In = ParameterLocation.Header,
-           Type = SecuritySchemeType.ApiKey,
-           Scheme = JwtBearerDefaults.AuthenticationScheme
-       });
-
-       c.AddSecurityRequirement(new OpenApiSecurityRequirement
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
     {
-     {
-      new OpenApiSecurityScheme
-      {
-       Reference = new OpenApiReference
-       {
-        Type = ReferenceType.SecurityScheme,
-        Id = JwtBearerDefaults.AuthenticationScheme
-       },
-       Scheme = "jwt",
-       Name = JwtBearerDefaults.AuthenticationScheme,
-       In = ParameterLocation.Header,
-      },
-      new List<string>()
-     }
+        Description =
+        "JWT Authorization header using the Bearer scheme. \r\n\r\n " +
+        "Enter 'Bearer' [space] and then your token in the text input below." +
+        "\r\n\r\nExample: \"Bearer 12345abcdef\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = JwtBearerDefaults.AuthenticationScheme
     });
-   });
-
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {{
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+            Type = ReferenceType.SecurityScheme,
+            Id = JwtBearerDefaults.AuthenticationScheme
+            },
+            Scheme = "jwt",
+            Name = JwtBearerDefaults.AuthenticationScheme,
+            In = ParameterLocation.Header,
+        },
+        new List<string>()
+    }});
+});
 
 var app = builder.Build();
 
@@ -118,7 +102,6 @@ async Task CreateRoles(IServiceProvider serviceProvider)
         IdentityRole? identityRole;
         if (!roleExist)
         {
-            // ������� ���� � ��������� � ���� ������
             identityRole = new IdentityRole(role.Key);
             var roleResult = await roleManager.CreateAsync(identityRole);
         }
@@ -140,7 +123,6 @@ async Task CreateRoles(IServiceProvider serviceProvider)
 
 using var scope = app.Services.CreateScope();
 await CreateRoles(scope.ServiceProvider);
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -150,11 +132,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapControllers();
-//app.UseMiddleware<ResponseTimeMetricMiddleware>();
-//app.UseMiddleware<ResponseStatusMetricMiddleware>();
-// удалить
 app.UseHttpMetrics();
-
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -162,4 +140,3 @@ app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseMetricServer();
 
 app.Run();
-

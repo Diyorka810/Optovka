@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Optovka.Model
+namespace Optovka
 {
     [DataContract]
     public class UserInfoDto

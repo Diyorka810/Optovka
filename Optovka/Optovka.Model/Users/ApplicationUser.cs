@@ -1,12 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography.X509Certificates;
+﻿using Microsoft.AspNetCore.Identity;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Optovka.Model
 {
@@ -21,7 +14,6 @@ namespace Optovka.Model
             PersonalUserPosts = new List<UserPost>();
             ParticipatedUserPosts = new List<UserPost>();
         }
-
 
         public (bool, StringBuilder) IsValid()
         {
@@ -58,9 +50,9 @@ namespace Optovka.Model
                     isValid = false;
                 }
             }
-
             
         }
+
         public int CountYears()
         {
             var today = DateTime.Today;
@@ -80,4 +72,3 @@ namespace Optovka.Model
         }
     }
 }
-

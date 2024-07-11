@@ -38,7 +38,6 @@ namespace Optovka
                     StatusCodes.Status401Unauthorized,
                     new ApiResponse { Status = "Error", Message = "You can change only your posts" });
 
-
             await userPostsService.TryUpdateAsync(dto.ToUserPostModel(), userPost);
             return StatusCode(StatusCodes.Status201Created);
         }

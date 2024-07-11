@@ -40,6 +40,7 @@ namespace OptovkaTests
             var contextUser = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                 new("userId", "1")
             }, "TestAuthentication"));
+
             httpContext = new DefaultHttpContext()
             {
                 User = contextUser

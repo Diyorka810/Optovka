@@ -46,26 +46,31 @@
             get => authorUserId;
             set => authorUserId = value;
         }
+
         public string Title
         {
             get => title;
             set => title = value;
         }
+
         public string Section
         {
             get => section;
             set => section = value;
         }
+
         public string Description
         {
             get => description;
             set => description = value;
         }
+
         public int RequiredQuantity
         {
             get => requiredQuantity;
             set => requiredQuantity = value;
         }
+
         public int TakenQuantity
         {
             get => takenQuantity;

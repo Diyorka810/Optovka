@@ -8,10 +8,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ApplicationUserUserPost> ApplicationUserUserPosts { get; set; }
 
     public ApplicationDbContext() { }
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-
-    }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,9 +20,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 .HasOne(p => p.AuthorUser)
                 .WithMany(b => b.PersonalUserPosts)
                 .HasForeignKey(p => p.AuthorUserId);
-        //modelBuilder.Entity<UserPost>()
-        //        .HasMany(c => c.ParticipatingUsers)
-        //        .WithMany(p => p.ParticipatedUserPosts);
 
         modelBuilder.Entity<UserPost>()
         .HasMany(e => e.ParticipatingUsers)

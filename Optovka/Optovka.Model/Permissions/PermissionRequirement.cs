@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Optovka.Model;
-
-public class PermissionsRequirement : IAuthorizationRequirement
+namespace Optovka.Model
 {
-    public string[] RequiredPermissions { get; }
-
-    public PermissionsRequirement(params string[] requiredPermissions)
+    public class PermissionsRequirement : IAuthorizationRequirement
     {
-        RequiredPermissions = requiredPermissions;
+        public string[] RequiredPermissions { get; }
+
+        public PermissionsRequirement(params string[] requiredPermissions)
+        {
+            RequiredPermissions = requiredPermissions;
+        }
     }
 }

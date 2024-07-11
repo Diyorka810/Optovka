@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Moq;
+﻿using Moq;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using Optovka.Model;
-using static System.Collections.Specialized.BitVector32;
 
 namespace OptovkaTests.Controllers
 {

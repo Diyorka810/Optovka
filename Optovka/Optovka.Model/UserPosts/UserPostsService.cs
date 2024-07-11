@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Optovka.Model
 {
@@ -34,9 +33,8 @@ namespace Optovka.Model
         public bool HasFreeQuantity(UserPost userPost, int desiredQuantity)
         {
             if (userPost.TakenQuantity + desiredQuantity > userPost.RequiredQuantity)
-            {
                 return false;
-            }
+
             return true;
         }
 
