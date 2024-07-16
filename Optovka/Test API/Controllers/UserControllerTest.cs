@@ -90,7 +90,7 @@ namespace OptovkaTests
             var actionResult = expectedResult as ObjectResult;
             Assert.IsNotNull(actionResult);
             Assert.AreEqual(actionResult.StatusCode, 400);
-            var expectedValue = actionResult.Value as ApiResponse;
+            var expectedValue = actionResult.Value as ApiResponseDto;
             Assert.IsNotNull(expectedValue);
             Assert.AreEqual(expectedValue.Status, status);
             Assert.AreEqual(expectedValue.Message, message);
@@ -113,7 +113,7 @@ namespace OptovkaTests
             Assert.IsNotNull(actionResult);
             var expectedStatusCode = actionResult.StatusCode;
             Assert.AreEqual(expectedStatusCode, 201);
-            var expectedValue = actionResult.Value as ApiResponse;
+            var expectedValue = actionResult.Value as ApiResponseDto;
             Assert.IsNotNull(expectedValue);
             Assert.AreEqual(expectedValue.Status, status);
             Assert.AreEqual(expectedValue.Message, message);
@@ -139,7 +139,7 @@ namespace OptovkaTests
             var actionResult = expectedResult as ObjectResult;
             Assert.IsNotNull(actionResult);
             Assert.AreEqual(actionResult.StatusCode, 400);
-            var expectedValue = actionResult.Value as ApiResponse;
+            var expectedValue = actionResult.Value as ApiResponseDto;
             Assert.IsNotNull(expectedValue);
             Assert.AreEqual(expectedValue.Status, status);
             Assert.AreEqual(expectedValue.Message, message);
@@ -170,7 +170,7 @@ namespace OptovkaTests
             Assert.IsNotNull(actionResult);
             var expectedStatusCode = actionResult.StatusCode;
             Assert.AreEqual(expectedStatusCode, 400);
-            var expectedValue = actionResult.Value as ApiResponse;
+            var expectedValue = actionResult.Value as ApiResponseDto;
             Assert.IsNotNull(expectedValue);
             Assert.AreEqual(expectedValue.Status, status);
             Assert.AreEqual(expectedValue.Message, message);
@@ -195,7 +195,7 @@ namespace OptovkaTests
             Assert.IsNotNull(actionResult);
             var expectedStatusCode = actionResult.StatusCode;
             Assert.AreEqual(expectedStatusCode, 400);
-            var expectedValue = actionResult.Value as ApiResponse;
+            var expectedValue = actionResult.Value as ApiResponseDto;
             Assert.IsNotNull(expectedValue);
             Assert.AreEqual(expectedValue.Status, status);
             Assert.AreEqual(expectedValue.Message, message);

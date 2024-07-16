@@ -15,8 +15,8 @@ namespace OptovkaTests.Models
         public void SetUp()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "test")
-            .Options;
+                    .UseInMemoryDatabase(databaseName: "test")
+                    .Options;
             context = new ApplicationDbContext(options);
             cache = new Mock<IInMemoryCache>();
             userPost = new UserPost("1", "title", "section", "description", 1);

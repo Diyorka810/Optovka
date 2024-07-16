@@ -3,7 +3,7 @@
 namespace Optovka
 {
     [DataContract]
-    public record ApiResponse
+    public record ApiResponseDto
     {
         [DataMember(Name = "status")]
         public required string Status;

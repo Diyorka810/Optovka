@@ -32,10 +32,7 @@ namespace Optovka.Model
 
         public bool HasFreeQuantity(UserPost userPost, int desiredQuantity)
         {
-            if (userPost.TakenQuantity + desiredQuantity > userPost.RequiredQuantity)
-                return false;
-
-            return true;
+            return userPost.TakenQuantity + desiredQuantity <= userPost.RequiredQuantity;
         }
 
         public async Task TakePartAsync(int desiredQuantity, UserPost userPost, string userId)
@@ -54,14 +51,12 @@ namespace Optovka.Model
 
         public async Task<List<UserPost>> GetAllAsync()
         {
-            var userPosts = await context.UserPosts.ToListAsync();
-            return userPosts;
+            return await context.UserPosts.ToListAsync();
         }
 
         public async Task<UserPost?> TryGetByTitleAsync(string title)
         {
-            var userPost = await context.UserPosts.FirstOrDefaultAsync(x => x.Title == title);
-            return userPost;
+            return await context.UserPosts.FirstOrDefaultAsync(x => x.Title == title);
         }
     }
 }

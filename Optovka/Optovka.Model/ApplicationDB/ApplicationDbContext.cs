@@ -22,8 +22,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 .HasForeignKey(p => p.AuthorUserId);
 
         modelBuilder.Entity<UserPost>()
-        .HasMany(e => e.ParticipatingUsers)
-        .WithMany(e => e.ParticipatedUserPosts)
-        .UsingEntity<ApplicationUserUserPost>(x => x.Property(y => y.TakenQuantity));
+                .HasMany(e => e.ParticipatingUsers)
+                .WithMany(e => e.ParticipatedUserPosts)
+                .UsingEntity<ApplicationUserUserPost>(x => x.Property(y => y.TakenQuantity));
     }
 }

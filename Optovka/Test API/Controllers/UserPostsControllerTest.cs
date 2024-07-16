@@ -103,7 +103,7 @@ namespace OptovkaTests
             var actionResult = expectedResult.Result as ObjectResult;
             Assert.IsNotNull(actionResult);
             Assert.AreEqual(actionResult.StatusCode, 401);
-            var resultValue = actionResult.Value as ApiResponse;
+            var resultValue = actionResult.Value as ApiResponseDto;
             Assert.IsNotNull(resultValue);
             Assert.AreEqual(resultValue.Status, status);
             Assert.AreEqual(resultValue.Message, message);
@@ -168,7 +168,7 @@ namespace OptovkaTests
             var actionResult = expectedResult.Result as ObjectResult;
             Assert.IsNotNull(actionResult);
             Assert.AreEqual(actionResult.StatusCode, 400);
-            var resultValue = actionResult.Value as ApiResponse;
+            var resultValue = actionResult.Value as ApiResponseDto;
             Assert.IsNotNull(resultValue);
             Assert.AreEqual(resultValue.Status, status);
             Assert.AreEqual(resultValue.Message, message);

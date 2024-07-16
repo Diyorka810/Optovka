@@ -13,14 +13,21 @@ namespace OptovkaTests
         [TestInitialize]
         public void Setup()
         {
+            var dbName = new Guid().ToString();
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "test")
-            .Options;
+                    .UseInMemoryDatabase(databaseName: dbName)
+                    .Options;
             context = new ApplicationDbContext(options);
 
             userPostModel = new UserPostModel("title", "section", "description", 1);
             authorUserId = "1";
             userPost = new UserPost(userPostModel, authorUserId);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            context.Database.EnsureDeleted();
         }
 
         [TestMethod]
@@ -42,11 +49,28 @@ namespace OptovkaTests
             Assert.AreEqual(post.Description, userPostModel.Description);
             Assert.AreEqual(post.RequiredQuantity, userPostModel.RequiredQuantity);
             Assert.AreEqual(post.AuthorUserId, authorUserId);
+        }
 
-            context.UserPosts.RemoveRange(userPosts);
-            context.SaveChanges();
-            var newUserPosts = context.UserPosts.ToList();
-            Assert.AreEqual(newUserPosts.Count(), 0);
+        [TestMethod]
+        public async Task GetAllAsync_Succeed()
+        {
+            //Arrange
+            var userPostService = new UserPostsService(context);
+            await userPostService.AddAsync(userPostModel, authorUserId);
+
+            //Act
+            var expectedResult = await userPostService.GetAllAsync();
+
+            //Assert
+            Assert.IsNotNull(expectedResult);
+            Assert.AreEqual(expectedResult.Count(), 1);
+            var expectedPost = expectedResult.FirstOrDefault();
+            Assert.IsNotNull(expectedPost);
+            Assert.AreEqual(expectedPost.Title, userPost.Title);
+            Assert.AreEqual(expectedPost.Section, userPost.Section);
+            Assert.AreEqual(expectedPost.Description, userPost.Description);
+            Assert.AreEqual(expectedPost.RequiredQuantity, userPost.RequiredQuantity);
+            Assert.AreEqual(expectedPost.AuthorUserId, authorUserId);
         }
 
         [TestMethod]
@@ -68,11 +92,6 @@ namespace OptovkaTests
             Assert.AreEqual(post.Description, userPost.Description);
             Assert.AreEqual(post.RequiredQuantity, userPost.RequiredQuantity);
             Assert.AreEqual(post.AuthorUserId, authorUserId);
-
-            context.UserPosts.RemoveRange(userPosts);
-            context.SaveChanges();
-            var newUserPosts = context.UserPosts.ToList();
-            Assert.AreEqual(newUserPosts.Count(), 0);
         }
 
         [TestMethod]
@@ -103,31 +122,7 @@ namespace OptovkaTests
             Assert.IsFalse(expectedResult);
         }
 
-        [TestMethod]
-        public async Task GetAllAsync_Succeed()
-        {
-            var userPostService = new UserPostsService(context);
-            await userPostService.AddAsync(userPostModel, authorUserId);
-
-            //Act
-            var expectedResult = await userPostService.GetAllAsync();
-
-            //Assert
-            Assert.IsNotNull(expectedResult);
-            Assert.AreEqual(expectedResult.Count(), 1);
-            var expectedPost = expectedResult.FirstOrDefault();
-            Assert.IsNotNull(expectedPost);
-            Assert.AreEqual(expectedPost.Title, userPost.Title);
-            Assert.AreEqual(expectedPost.Section, userPost.Section);
-            Assert.AreEqual(expectedPost.Description, userPost.Description);
-            Assert.AreEqual(expectedPost.RequiredQuantity, userPost.RequiredQuantity);
-            Assert.AreEqual(expectedPost.AuthorUserId, authorUserId);
-
-            context.UserPosts.RemoveRange(expectedResult);
-            context.SaveChanges();
-            var newUserPosts = context.UserPosts.ToList();
-            Assert.AreEqual(newUserPosts.Count(), 0);
-        }
+        
 
         [TestMethod]
         public async Task TakePartAsync_Succeed()
@@ -153,11 +148,6 @@ namespace OptovkaTests
             Assert.AreEqual(post.RequiredQuantity, userPost.RequiredQuantity);
             Assert.AreEqual(post.AuthorUserId, authorUserId);
             Assert.AreEqual(post.TakenQuantity, desiredQuantity);
-
-            context.UserPosts.RemoveRange(userPosts);
-            context.SaveChanges();
-            var newUserPosts = context.UserPosts.ToList();
-            Assert.AreEqual(newUserPosts.Count(), 0);
         }
 
         [TestMethod]
@@ -185,11 +175,6 @@ namespace OptovkaTests
             Assert.AreEqual(post.Description, expectedResult.Description);
             Assert.AreEqual(post.RequiredQuantity, expectedResult.RequiredQuantity);
             Assert.AreEqual(post.AuthorUserId, expectedResult.AuthorUserId);
-
-            context.UserPosts.RemoveRange(userPosts);
-            context.SaveChanges();
-            var newUserPosts = context.UserPosts.ToList();
-            Assert.AreEqual(newUserPosts.Count(), 0);
         }
 
         [TestMethod]
@@ -209,11 +194,6 @@ namespace OptovkaTests
             Assert.AreEqual(expectedResult.Description, userPost.Description);
             Assert.AreEqual(expectedResult.RequiredQuantity, userPost.RequiredQuantity);
             Assert.AreEqual(expectedResult.AuthorUserId, authorUserId);
-
-            context.UserPosts.RemoveRange(expectedResult);
-            context.SaveChanges();
-            var newUserPosts = context.UserPosts.ToList();
-            Assert.AreEqual(newUserPosts.Count(), 0);
         }
     }
 }

@@ -24,7 +24,9 @@ namespace Optovka.Model
             if (this.Email != null)
             {
                 var symbols = "!#$%^&*()-=_+,?/|\\`:;\'\"{}[]";
-                Validate(() => StringExtensions.ContainsAny(this.Email, symbols), "The email can only contain letters, numbers and . ");
+                Validate(
+                    () => StringExtensions.ContainsAny(this.Email, symbols),
+                    "The email can only contain letters, numbers and . ");
 
                 var emailArr = this.Email.Split('@');
                 Validate(() => emailArr.Length != 2, "Email should contains one @");

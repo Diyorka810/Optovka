@@ -44,7 +44,9 @@ namespace Optovka
 
                 return Ok(userInfo);
             }
-            return StatusCode(StatusCodes.Status400BadRequest, new ApiResponse { Status = "Error", Message = "User not found" });
+            return StatusCode(
+                StatusCodes.Status400BadRequest, 
+                new ApiResponseDto { Status = "Error", Message = "User not found" });
         }
 
         [HttpPost("register")]
@@ -52,7 +54,9 @@ namespace Optovka
         {
             var userExists = await _userManager.FindByNameAsync(registerModel.UserName);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status400BadRequest, new ApiResponse { Status = "Error", Message = "User already exists!" });
+                return StatusCode(
+                    StatusCodes.Status400BadRequest, 
+                    new ApiResponseDto { Status = "Error", Message = "User already exists!" });
 
             var user = new ApplicationUser()
             {
@@ -67,14 +71,16 @@ namespace Optovka
             var (isValid, errorsList) = user.IsValid();
             if (!isValid)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, new ApiResponse { Status = "Error", Message = errorsList.ToString() });
+                return StatusCode(
+                    StatusCodes.Status400BadRequest,
+                    new ApiResponseDto { Status = "Error", Message = errorsList.ToString() });
             }
 
             var createResult = await _userManager.CreateAsync(user, registerModel.Password);
             if (!createResult.Succeeded)
                 return StatusCode(
                     StatusCodes.Status400BadRequest,
-                    new ApiResponse
+                    new ApiResponseDto
                     {
                         Status = "Error",
                         Message = string.Join("\n", createResult.Errors.Select(s => s.Description).ToList())
@@ -82,7 +88,9 @@ namespace Optovka
 
             await _userManager.AddToRoleAsync(user, "User");
 
-            return StatusCode(StatusCodes.Status201Created, new ApiResponse { Status = "Success", Message = "User created successfully!" });
+            return StatusCode(
+                StatusCodes.Status201Created,
+                new ApiResponseDto { Status = "Success", Message = "User created successfully!" });
         }
 
         [HttpPost("login")]

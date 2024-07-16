@@ -4,7 +4,11 @@ namespace Optovka.Model
 {
     public class FeedService(ApplicationDbContext context, IInMemoryCache inMemoryCache) : IFeedService
     {
-        public async Task<IEnumerable<UserPost>> GetAsync(string sectionFilter, int skip, int limit, SortingOrderType sortingOrderType)
+        public async Task<IEnumerable<UserPost>> GetAsync(
+            string sectionFilter, 
+            int skip, 
+            int limit, 
+            SortingOrderType sortingOrderType)
         {
             var cacheKey = $"Feed_{sectionFilter}_{skip}_{limit}_{sortingOrderType}";
 
